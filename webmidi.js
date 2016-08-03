@@ -117,21 +117,37 @@ function onMIDISuccess(/*MIDIAccess*/ midiAccess) {
         // $("#debug").append("play clicked... <br />");
 
         var interval = 0.0;
-        midi.outputs[midiOutputIndex].send([0x90, 0x3c, 0x7f], interval); // C (ド)
+        midi.outputs[midiOutputIndex].send([0x90, 0x3c, 0x40], interval); // C (ド) - ON
         interval += 500.0;
-        midi.outputs[midiOutputIndex].send([0x90, 0x3e, 0x7f], interval); // D (レ)
+        midi.outputs[midiOutputIndex].send([0x80, 0x3c, 0x40], interval); // C (ド) - OFF
+
+        midi.outputs[midiOutputIndex].send([0x90, 0x3e, 0x40], interval); // D (レ) - ON
         interval += 500.0;
-        midi.outputs[midiOutputIndex].send([0x90, 0x40, 0x7f], interval); // E (ミ)
+        midi.outputs[midiOutputIndex].send([0x80, 0x3e, 0x40], interval); // D (レ) - OFF
+
+        midi.outputs[midiOutputIndex].send([0x90, 0x40, 0x40], interval); // E (ミ) - ON
         interval += 500.0;
-        midi.outputs[midiOutputIndex].send([0x90, 0x41, 0x7f], interval); // F (ファ)
+        midi.outputs[midiOutputIndex].send([0x80, 0x40, 0x40], interval); // E (ミ) - OFF
+
+        midi.outputs[midiOutputIndex].send([0x90, 0x41, 0x40], interval); // F (ファ) - ON
         interval += 500.0;
-        midi.outputs[midiOutputIndex].send([0x90, 0x43, 0x7f], interval); // G (ソ)
+        midi.outputs[midiOutputIndex].send([0x80, 0x41, 0x40], interval); // F (ファ) - OFF
+
+        midi.outputs[midiOutputIndex].send([0x90, 0x43, 0x40], interval); // G (ソ) - ON
         interval += 500.0;
-        midi.outputs[midiOutputIndex].send([0x90, 0x45, 0x7f], interval); // A (ラ)
+        midi.outputs[midiOutputIndex].send([0x80, 0x43, 0x40], interval); // G (ソ) - OFF
+
+        midi.outputs[midiOutputIndex].send([0x90, 0x45, 0x40], interval); // A (ラ) - ON
         interval += 500.0;
-        midi.outputs[midiOutputIndex].send([0x90, 0x47, 0x7f], interval); // B (シ)
+        midi.outputs[midiOutputIndex].send([0x80, 0x45, 0x40], interval); // A (ラ) - OFF
+
+        midi.outputs[midiOutputIndex].send([0x90, 0x47, 0x40], interval); // B (シ) - ON
         interval += 500.0;
-        midi.outputs[midiOutputIndex].send([0x90, 0x48, 0x7f], interval); // C (ド)
+        midi.outputs[midiOutputIndex].send([0x80, 0x47, 0x40], interval); // B (シ) - OFF
+
+        midi.outputs[midiOutputIndex].send([0x90, 0x48, 0x40], interval); // C (ド) - ON
+        interval += 500.0;
+        midi.outputs[midiOutputIndex].send([0x80, 0x48, 0x40], interval); // C (ド) - OFF
     });
 }
 
