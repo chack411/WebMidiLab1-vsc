@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web MIDI API Demo - Play SMF</title>
+    <link href="/Content/bootstrap.css" rel="stylesheet"/>
+    <link href="/Content/site.css" rel="stylesheet"/>
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="index.html">Web MIDI Lab</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="index.html">Basic</a></li>
+                    <li><a href="play.html">Play</a></li>
+               </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        <h2>Web MIDI API Demo - Play Standard MIDI File (.mid)</h2>
+
+        <script src="/bower_components/webcomponentsjs/webcomponents.js"></script>
+        <link rel="import" href="/bower_components/polymer/polymer.html">
+        <link rel="import" href="/bower_components/x-webmidi/extras/wm-webmidilink/wm-webmidilink.html">
+        <link rel="import" href="/bower_components/x-webmidi/extras/wm-smfplayer/wm-smfplayer.html">
+
+        <wm-webmidilink id="wmlink"></wm-webmidilink>
+        <wm-smfplayer id="smfplayer" midifile="/Content/SUZANNA.mid" latency="1200"></wm-smfplayer>
+
+        <div style="margin-top: 20px; font-size: 1.2em">
+            MIDI Output: <select id="midi-output"><option>Select ...</option></select><span id="virtual-output"></span><br /><br />
+        </div>
+
+        <input type="button" id="play" value="Play" />
+        <input type="button" id="stop" value="Stop" />
+    </div>
+
+    <script src="/Scripts/jquery-1.10.2.js"></script>
+    <script src="/Scripts/bootstrap.js"></script>
+    <script src="/Scripts/respond.js"></script>
+    <script type="text/javascript">
+    var midi = { "inputs": [], "outputs": [] };
+    var midiOutputIndex = 0;
+
+    // returns a Promise object representing a request for access to MIDI devices on the user's system.
+    // Promise<MIDIAccess> requestMIDIAccess (optional MIDIOptions options);
+    navigator.requestMIDIAccess({ sysex: false }).then(onMIDISuccess, onMIDIFailure);
+
+    function onMIDISuccess(/*MIDIAccess*/ midiAccess) {
+
+        // List MIDI Output devices
+        var it = midiAccess.outputs.values();
+        for (var output = it.next(); !output.done; output = it.next()) {
+            midi.outputs.push(output.value);
+        }
+        // Add a virtual MIDI Output device
+        midi.outputs.push((document.querySelector("#wmlink")).getOutput());
+
+        // Show MIDI output devices
+        var listOutput = document.querySelector("#midi-output");
+        for (var i = 0; i < midi.outputs.length; i++) {
+            listOutput.appendChild(new Option(midi.outputs[i]["name"], i));
+        }
+
+        // When the MIDI output devices is changed
+        listOutput.addEventListener("change", function (event) {
+
+            if (parseInt(event.target.value) >= 0) {
+                midiOutputIndex = event.target.value;
+
+                // When the vertual MIDI output device is selected
+                if (midi.outputs[midiOutputIndex].virtual == true) {
+                    document.querySelector("#virtual-output").appendChild(document.querySelector("#wmlink").getElement());
+                } else {
+                    document.querySelector("#virtual-output").innerHTML = ""
+                }
+            }
+
+        });
+
+        $("#play").click(function () {
+            if (parseInt(midiOutputIndex) >= 0) {
+                document.querySelector("#smfplayer").startPlay(midi.outputs[midiOutputIndex]);
+            }
+        });
+
+        $("#stop").click(function () {
+            if (parseInt(midiOutputIndex) >= 0) {
+                document.querySelector("#smfplayer").stopPlay();
+            }
+        });
+    }
+
+    function onMIDIFailure(msg) {
+        alert("[ERROR] " + msg);
+    }
+
+    </script>
+
+</body>
+</html>

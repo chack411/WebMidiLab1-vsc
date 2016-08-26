@@ -711,8 +711,9 @@ Polymer((function() {
         ready: function() {
             var path=location.pathname.split("/");
             path.pop();
-            var file_url=location.protocol+"//"+location.hostname+path.join("/")+"/"+this.midifile;
-            var xhr=new XMLHttpRequest();
+            //var file_url=location.protocol+"//"+location.hostname+path.join("/")+"/"+this.midifile;
+            var file_url = this.midifile;
+			var xhr=new XMLHttpRequest();
 
             this.smfParser = new SmfParser();
 
